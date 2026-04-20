@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Usage Tracker</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 320px;
+    background: #0f0f1a;
+    color: #e5e7eb;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+  }
+
+  .header {
+    padding: 16px 18px 12px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-bottom: 1px solid rgba(139,92,246,0.3);
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    color: #a78bfa;
+    letter-spacing: 0.02em;
+  }
+
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .plan-select {
+    background: rgba(139,92,246,0.15);
+    border: 1px solid rgba(139,92,246,0.4);
+    color: #a78bfa;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .plan-select option { background: #1a1a2e; }
+
+  .subtitle {
+    font-size: 10px;
+    color: #6b7280;
+  }
+
+  .section {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .stat-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e5e7eb;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bar-track {
+    height: 8px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 3px;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  .bar-ok      { background: linear-gradient(90deg, #10b981, #34d399); box-shadow: 0 0 6px rgba(16,185,129,0.4); }
+  .bar-warning { background: linear-gradient(90deg, #f59e0b, #fbbf24); box-shadow: 0 0 6px rgba(245,158,11,0.4); }
+  .bar-danger  { background: linear-gradient(90deg, #ef4444, #f87171); box-shadow: 0 0 6px rgba(239,68,68,0.4); }
+
+  .bar-meta {
+    font-size: 10px;
+    color: #4b5563;
+    text-align: right;
+    margin-bottom: 6px;
+  }
+
+  .info-box {
+    background: rgba(139,92,246,0.07);
+    border: 1px solid rgba(139,92,246,0.15);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 0 18px 14px;
+  }
+
+  .info-box p {
+    font-size: 10px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .info-box strong { color: #a78bfa; }
+
+  .actions {
+    padding: 12px 18px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(139,92,246,0.3);
+    background: rgba(139,92,246,0.1);
+    color: #a78bfa;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .btn:hover { background: rgba(139,92,246,0.25); }
+
+  .btn-danger {
+    border-color: rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.08);
+    color: #f87171;
+  }
+  .btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+  .footer {
+    padding: 8px 18px 12px;
+    text-align: center;
+  }
+
+  .footer p {
+    font-size: 9px;
+    color: #374151;
+    line-height: 1.5;
+  }
+
+  .alltime {
+    font-size: 11px;
+    color: #6b7280;
+    text-align: center;
+    padding: 6px 0 0;
+  }
+
+  #status-msg {
+    font-size: 10px;
+    color: #10b981;
+    text-align: center;
+    min-height: 16px;
+    padding: 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">📊</div>
+      Claude Tracker
+    </div>
+    <select class="plan-select" id="plan-select">
+      <option value="free">FREE</option>
+      <option value="pro">PRO</option>
+      <option value="max5x">MAX 5x</option>
+    </select>
+  </div>
+  <div class="subtitle">আপনার Claude.ai ব্যবহার ট্র্যাক করুন</div>
+</div>
+
+<div class="section">
+  <div class="section-title">⚡ Session (৫ ঘণ্টা)</div>
+  <div class="stat-row">
+    <span class="stat-label">Messages sent</span>
+    <span class="stat-value" id="p-session-nums">0 / 30</span>
+  </div>
+  <div class="bar-track"><div class="bar-fill bar-ok" id="p-session-fill" style="width:0%"></div></div>
+  <div class="bar-meta" id="p-session-meta">Loading...</div>
+
+  <div class="section-title" style="margin-top:14px">📅 আজকে</div>
+  <div class="stat-row">
+    <span class="stat-label">Messages sent</span>
+    <span class="stat-value" id="p-daily-nums">0 / 60</span>
+  </div>
+  <div class="bar-track"><div class="bar-fill bar-ok" id="p-daily-fill" style="width:0%"></div></div>
+  <div class="bar-meta" id="p-daily-meta">Loading...</div>
+
+  <div class="section-title" style="margin-top:14px">🗓️ এই সপ্তাহ</div>
+  <div class="stat-row">
+    <span class="stat-label">Messages sent</span>
+    <span class="stat-value" id="p-weekly-nums">0 / 300</span>
+  </div>
+  <div class="bar-track"><div class="bar-fill bar-ok" id="p-weekly-fill" style="width:0%"></div></div>
+  <div class="bar-meta" id="p-weekly-meta">Loading...</div>
+
+  <div class="alltime" id="p-alltime">মোট: 0 messages</div>
+</div>
+
+<div class="info-box">
+  <p>⚠️ <strong>দ্রষ্টব্য:</strong> Anthropic সঠিক token সংখ্যা প্রকাশ করে না। এই ট্র্যাকার <strong>message count</strong> এবং <strong>অনুমানিত limits</strong> ব্যবহার করে। Free plan এ প্রতি ৫ঘণ্টায় ১৫-৪০টি message পাওয়া যায় (demand অনুযায়ী পরিবর্তিত হয়)।</p>
+</div>
+
+<div id="status-msg"></div>
+
+<div class="actions">
+  <button class="btn" id="reset-session">Session রিসেট</button>
+  <button class="btn btn-danger" id="reset-all">সব রিসেট</button>
+</div>
+
+<div class="footer">
+  <p>Claude.ai-তে গেলে chat box এর নিচে progress bar দেখতে পাবেন</p>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
