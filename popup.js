@@ -1,4 +1,4 @@
-// Popup Script — Claude Usage Tracker v2.0
+// Popup Script — Claude Usage Tracker v2.2
 // All DOM access is wrapped in DOMContentLoaded for safety.
 
 'use strict';

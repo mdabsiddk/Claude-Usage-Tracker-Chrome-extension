@@ -1,4 +1,4 @@
-// Content Script — Claude Usage Tracker v2.1
+// Content Script — Claude Usage Tracker v2.2
 // Fixes: Network Interception for 100% accuracy, Dynamic Sync, Cross-tab Real-time Sync
 
 (function () {

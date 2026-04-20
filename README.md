@@ -19,8 +19,11 @@
 
 ### 📡 সুপার-অ্যাকুরেট ট্র্যাকিং ও সিঙ্ক (v2.2)
 - **Network Request Interception:** `window.fetch` এপিআই ওভাররাইড করে Claude-এর সার্ভারে পাঠানো রিয়েল API রিকোয়েস্ট ট্র্যাক করে! ফলে মেসেজ ফেইল হলে বা বাটন পর পর দুইবার চাপলেও কোনো False Positive বা ডাবল কাউন্ট হয় না।
+
 - **Cross-Device Background Sync:** ল্যাপটপ এবং ডেস্কটপে একত্রে ব্যবহার করুন! `chrome.alarms` এবং Time-based Auto-Merge Conflict Resolution ব্যবহার করে ডাটা হারানো ছাড়াই দুই ডিভাইসের ট্র্যাকার সবসময় আপডেট থাকে। 
+
 - **Real-time Tab Sync:** মাল্টিপল ক্লাউড ট্যাব ওপেন থাকলে, এক ট্যাবে মেসেজ দিলে বা লিমিট আপডেট হলে ব্যাকগ্রাউন্ড থেকে মুহূর্তের মধ্যে সবগুলো ট্যাবে আপডেট ব্রডকাস্ট হয়।
+
 - **Dynamic Limit Parsing:** Claude যদি লিমিট কমিয়ে দেয় (যেমন- "5 messages remaining"), ট্র্যাকারটি `MutationObserver` এর মাধ্যমে অটোমেটিক্যালি সেটি বুঝতে পারে এবং লোকাল কাউন্টার সিঙ্ক করে নেয়!
 
 ### 📊 তিনটি রিয়েল-টাইম প্রগতি ট্র্যাকার
@@ -35,6 +38,7 @@
 
 ### 🔒 ১০০% নিরাপদ, ফ্রি ও ওপেন সোর্স
 - **ডেটা প্রাইভেসি:** আপনার ট্র্যাকিং ডাটা শুধুমাত্র আপনার ডিভাইসেই সেভ হয়। এটি সম্পূর্ণ নিরাপদ, কোনো এক্সটার্নাল সার্ভারে তথ্য পাঠানো হয় না।
+
 - **ফ্রি ও ওপেন সোর্স:** কোনো সাবস্ক্রিপশন নেই, সবার জন্য কোড সম্পূর্ণ উন্মুক্ত।
 
 ---
@@ -43,10 +47,21 @@
 
 এই এক্সটেনশনটি পারফরম্যান্স সর্বোচ্চ পর্যায়ে রাখার জন্য কোর জাভাস্ক্রিপ্টে (Vanilla JS) এবং Manifest V3 স্ট্যান্ডার্ড অনুসরণ করে বিল্ড করা হয়েছে:
 - **Core Platform:** Google Chrome Extension MV3
+
 - **Network Level Tracking:** Page Script Injection (`web_accessible_resources`), Native `window.fetch` Monkey Patching, `Window.postMessage` Event Bus.
+
 - **CPU Optimization:** DOM Polling (Interval) এর বদলে সম্পূর্ণ `MutationObserver` Pattern.
+
 - **State Management:** Promise-based Task Queue, In-Memory Object Cache (`_cache`).
+
 - **Distributed Sync Architecture:** `chrome.alarms` based Debounced Push, `chrome.storage.sync` & `local` merge collision tech, `chrome.storage.onChanged` Listener.
+
+### 🔐 ব্যবহৃত পারমিশনসমূহ (Permissions Required)
+- **`storage`**: এক্সটেনশনের ভেতরে লোকাল ডাটা ক্যাশ এবং আপনার বিভিন্ন ডিভাইসের মধ্যে ডাটা আদান-প্রদান (Sync) করার জন্য।
+
+- **`tabs`**: একই ব্রাউজারে মাল্টিপল ক্লাউড ট্যাব ওপেন থাকলে সবগুলো ট্যাবে রিয়েল-টাইমে আপডেট ব্রডকাস্ট করার জন্য।
+
+- **`alarms`**: ব্যাকগ্রাউন্ড Service Worker স্লিপ মোডে চলে গেলেও নির্দিষ্ট সময় পরপর (৫ মিনিট) ডিস্ট্রিবিউটেড সিঙ্ক সচল রাখার জন্য।
 
 ---
 
