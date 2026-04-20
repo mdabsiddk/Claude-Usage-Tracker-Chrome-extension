@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Claude Usage Tracker",
-  "version": "1.0.0",
-  "description": "Track your Claude.ai message usage with daily, weekly, and session progress bars shown directly in the chat interface.",
+  "version": "2.0.0",
+  "description": "Claude.ai-তে আপনার message usage ট্র্যাক করুন — session, daily ও weekly progress bar সহ।",
   "permissions": ["storage", "tabs"],
   "host_permissions": ["https://claude.ai/*"],
   "content_scripts": [
@@ -24,5 +24,11 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["page_script.js"],
+      "matches": ["https://claude.ai/*"]
+    }
+  ]
 }
